@@ -5,25 +5,7 @@ from fabric.api import local
 from datetime import datetime
 import os
 
-"""
-    ##########################################################################
-    # 1-pack_web_static.py: is a python script that                          #
-    # tires to merge the two beautiful words of fabric                       #
-    # and python, with the main of create a backup for                       #
-    # the folder stated below.                                               #
-    # REQUIREMENTS:                                                          #
-    #-> Prototype: def do_pack():                                            #
-    #-> All files in the folder web_static must be added to d final archive  #
-    #-> All archives must be stored in the folder versions                   #
-    #    (your function should create this folder if it doesn’t exist)       #
-    #-> The name of the archive created must be                              #
-    #   web_static_<year><month><day><hour><minute><second>.tgz              #
-    #-> The function do_pack must return the archive path if the             #
-    # archive has been correctly generated. Otherwise, it should return None #
-    ##########################################################################
-"""
-
-
+"""A python script that uses fabric for running command locally"""
 def do_pack():
     # Creates a dir on the local machine
     local("mkdir -p versions")
