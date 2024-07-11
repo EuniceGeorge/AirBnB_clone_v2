@@ -4,9 +4,12 @@
 from fabric.api import local
 from datetime import datetime
 import os
-
 """A python script that uses fabric for running command locally"""
+
 def do_pack():
+    "
+    do_pack: a function that acomplishes the above requirements
+    "
     # Creates a dir on the local machine
     local("mkdir -p versions")
 
