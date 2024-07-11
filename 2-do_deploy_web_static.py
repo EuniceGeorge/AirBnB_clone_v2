@@ -37,5 +37,8 @@ env.hosts = ['100.25.29.153', '54.197.46.53']
 def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
-    sudo(f"mkdir -p ~/ok")
+    # Upload the tar file to both servers
+    put(archieve_path, '/temp/')
+
+    # Uncompress the compressed file
     return True
