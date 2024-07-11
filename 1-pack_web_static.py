@@ -7,6 +7,7 @@ from fabric.api import local
 from datetime import datetime
 import os
 
+
 def do_pack():
     """do_pack: a function that acomplishes the above requirements"""
     # Creates a dir on the local machine
