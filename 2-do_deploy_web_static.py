@@ -1,44 +1,43 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-import os
+""" A Python script that aims to allow the compression of a file
+    and uses dateandtime as a means of showing most recent backup
+"""
+from fabric.api import local, put, env
 from datetime import datetime
-from fabric.api import sudo, env
+import os
 
-"""
-    #################################################################################
-    # 2-do_deploy_web_static.py: is a python script that distributes an             #
-    # archive to your a web server(s), using the function do_deploy                 #
-    # REQUIREMENTS:                                                                 #
-    # -> Prototype: def do_deploy(archive_path):                                    #
-    #-> Returns False if the file at the path archive_path doesn’t exist            #
-    #-> The script should take the following steps:                                 #
-    #   * Upload the archive to the /tmp/ directory of the web server               # 
-    #   * Uncompress the archive to the folder                                      #
-    #        /data/web_static/releases/<archive filename without extension>         #
-    #        on the web server                                                      #
-    #   * Delete the archive from the web server                                    #
-    #   * Delete the symbolic link /data/web_static/current from the web server     #
-    #   * Create a new the symbolic link /data/web_static/current on the web        #
-    #       server, linked to the new version of your code                          #
-    #       (/data/web_static/releases/<archive filename without extension>)        #
-    #-> All remote commands must be executed on your both web servers               #
-    #     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)  #
-    #-> Returns True if all operations have been done correctly,                    #
-    #    otherwise returns False                                                    #
-    #-> You must use this script to deploy it on your servers:                      #
-    #    xx-web-01 and xx-web-02                                                    #
-    #################################################################################
-"""
-
+# Fabric commands
+# Set env variables user and hosts
 env.user = 'ubuntu'
-env.hosts = ['100.25.29.153', '54.197.46.53']
+env.hosts = ["100.25.29.153", "54.197.46.53"]
+
 
 def do_deploy(archive_path):
-    if not os.path.exists(archive_path):
-        return False
-    # Upload the tar file to both servers
-    put(archieve_path, '/temp/')
+    """do_deploy: a function that acomplishes the above requirements"""
+    try:
+        if not os.path.isfile(archive_path):
+            return False
+        # Upload a tar archive of an application
+        put(archive_path, "/tmp/")
 
-    # Uncompress the compressed file
-    return True
+        # TODO: Add a check if file upload was OK
+
+        # If 200 OK, begin uncompression
+        file_path = archive_path.split(".")[0]
+        archive_file_name = f'/data/web_static/releases/{file_path}'
+
+        # --------- Fabric commands begins here -------------------
+        # Create a directory on server
+        sudo(f"mkdir /data/web_static/releases/{file_path}")
+        # Uncompress the uploaded tar file
+        sudo(f"tar -xf {archive_path} -C {archive_file_name}")
+        # if OK then remove the archieve file
+        sudo(f"rm {archive_path}")
+        # Unlink the pervious link
+        sudo("unlink {}".format("/data/web_static/current"))
+        # Create a new link
+        sudo(f"ln -s {archive_file_name} /data/web_static/current")
+        # -----------Fabric commands ends here -------------------
+    except Exception as bugfixdotexe:
+        return False
